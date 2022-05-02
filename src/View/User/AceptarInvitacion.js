@@ -27,8 +27,6 @@ import Footer from '../Layout/default/footer';
 import withNavigation from '../common/withNavigation';
 import loadingOverlay from '../common/loadingOverlay';
 
-import logo from '../assets/thin-cover.png';
-
 class AceptarInvitacion extends Component {
     state = {
         fields: {
@@ -285,9 +283,6 @@ class AceptarInvitacion extends Component {
         const login_form = (
             <>
                 {this.state.loading ? loadingOverlay() : null}
-                <Container fluid style={{padding: 0}}>
-                        <img style={{ width: '100%' }} src={logo} />
-                </Container>
                 <Container id="Step1">
                     <Row className="justify-content-md-center">
                         <Col lg={4} sm={12}>

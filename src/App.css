@@ -40,3 +40,29 @@
 div.dropdown-toggle::after {
   content:'' !important
 }
+
+.nav-link {
+  color: #000 !important
+}
+.nav-link:hover {
+  color: #000 !important
+}
+
+.bg-white {
+  --bs-bg-opacity: 1;
+  background-color: #fff !important;
+}
+
+.bg-bauns_red {
+  --bs-bg-opacity: 1;
+  background-color: #EE0048 !important;
+}
+
+.btn-white {
+  background-color: #fff !important;
+}
+
+.btn-red {
+  background-color: #96013C !important;
+  color: #fff !important
+}

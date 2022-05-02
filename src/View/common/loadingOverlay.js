@@ -21,7 +21,7 @@ export default () => {
             <div style={{
                 maxWidth: '500px',
                 margin: '1.75rem auto',
-            }} className="text-center"><Spinner animation="grow" variant="primary" /></div>
+            }} className="text-center"><Spinner animation="grow" variant="danger" /></div>
         </div>
     );
 }

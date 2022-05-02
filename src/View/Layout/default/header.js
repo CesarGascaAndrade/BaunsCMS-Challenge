@@ -6,7 +6,7 @@ import {
 
 } from 'react-bootstrap';
 
-import logoWhite from '../../assets/vector/default-monochrome-white.svg';
+import logo from '../../assets/bauns_red.png';
 
 import jwt_decode from 'jwt-decode';
 
@@ -14,8 +14,10 @@ import cookieman from '../../common/cookieman';
 
 const Header = (props) => {
     let session = null;
+    let user_name = null;
     if (cookieman.checkItem('token') !== null) {
         session = jwt_decode(cookieman.getItem('token'));
+        user_name = cookieman.getItem('user.name');
     }
 
     if (props.mustHaveSession && !session) {
@@ -23,10 +25,10 @@ const Header = (props) => {
     }
 
     return (
-        <Navbar variant="dark" bg="dark" expand="lg" sticky="top" >
+        <Navbar bg="white" expand="lg" sticky="top" >
             <Container>
                 <Navbar.Brand href="/">
-                    <img style={{ width: '30px' }} src={logoWhite} /> <span>Superks</span>
+                    <img style={{ width: '192px' }} src={logo} />
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
@@ -39,27 +41,25 @@ const Header = (props) => {
                         }
                         {
                             session !== null ?
-                                <NavDropdown menuVariant='dark' title="Clientes" id="basic-nav-dropdown">
-                                    <NavDropdown.Item href="/membresia/leer_qr">Leer QR</NavDropdown.Item>
-                                </NavDropdown>
+                                <Nav.Link href="/users">Users</Nav.Link>
                                 :
                                 null
                         }
-
                     </Nav>
                     {
                         session != null ?
-                            (<NavDropdown menuVariant="dark" title={session.nombre + ' ' + session.primer_apellido} id="basic-nav-dropdown" className="d-flex">
-                                <NavDropdown.Item href="/usuario/configuracion">Configuración</NavDropdown.Item>
+                            (<NavDropdown menuVariant="dark" title={user_name} className="d-flex">
+                                <NavDropdown.Item href="/usuario/configuracion">Settings</NavDropdown.Item>
                                 <NavDropdown.Divider />
                                 <NavDropdown.Item href="#" onClick={() => {
                                     cookieman.deleteItem('token');
+                                    cookieman.deleteItem('user');
                                     window.location.href = '/';
-                                }}>Salir</NavDropdown.Item>
+                                }}>Logout</NavDropdown.Item>
                             </NavDropdown>)
                             :
-                            (<NavDropdown title="Cuenta" id="basic-nav-dropdown" className="d-flex">
-                                <NavDropdown.Item href="login">Iniciar Sesión</NavDropdown.Item>
+                            (<NavDropdown title="Guest" className="d-flex">
+                                <NavDropdown.Item href="/login">Sign In</NavDropdown.Item>
                             </NavDropdown>)
                     }
                 </Navbar.Collapse>

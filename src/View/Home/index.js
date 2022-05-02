@@ -4,8 +4,11 @@ import {
     Container,
     Row,
     Col,
-    Card,
+    Table,
+    Button
 } from 'react-bootstrap';
+
+import { Link } from 'react-router-dom';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
@@ -18,38 +21,32 @@ import cookieman from '../common/cookieman';
 import Header from '../Layout/default/header';
 import Footer from '../Layout/default/footer';
 
-import CardMembresia from '../Elements/CardMembresia';
+import CardArticle from '../Elements/CardArticle';
 
 import loadingOverlay from '../common/loadingOverlay';
 
 class Home extends Component {
     state = {
         loading: true,
-        usuario: null,
-        membresias: [],
+        articles: []
     };
 
     componentDidMount() {
-        if(!cookieman.checkItem('token')) {
+        if (!cookieman.checkItem('token')) {
             return window.location.href = '/login';
         }
-        
-        const url_membresias = config.backend + '/catmembresias';
-        
-        axios.get(url_membresias, {
+
+        const url = config.backend + '/articles';
+
+        axios.get(url, {
             headers: {
                 token: cookieman.getItem('token')
             }
         }).then(response => {
-            if (response.data.success) {
-                this.setState({
-                    ...this.state,
-                    membresias: response.data.data,
-                }); 
-            }
-            else {
-                
-            }
+            this.setState({
+                ...this.state,
+                articles: response.data,
+            });
         }).catch(error => {
             console.log('error', error);
         }).finally(() => {
@@ -61,56 +58,58 @@ class Home extends Component {
 
     }
 
-    closeModalInvitarCliente() {
-        this.setState({
-            ...this.state,
-            showModalInvitarCliente: false
-        });
-    }
-
-    componentDidCatch(e) {
-        console.log(e);
-    }
-
     render() {
 
         if (this.state.loading) {
             return (loadingOverlay());
         }
 
-        const membresias_cards = [];
+        const rows = [];
 
-        this.state.membresias.forEach(membresia => {
-            membresias_cards.push(
-                <CardMembresia
-                    id={membresia.id}
-                    key={membresia.id}
-                    uuid={membresia.uuid}
-                    slug={membresia.slug}
-                    titulo={membresia.nombre}
-                    precio={membresia.precio}
-                    descripcion={membresia.descripcion}
-                    beneficios={membresia.beneficios}
-                    aclaraciones={membresia.aclaraciones} />
-            );
+        this.state.articles.forEach((article) => {
+
+            rows.push((
+                <tr>
+                    <td>{article.id}</td>
+                    <td><Link to={"/article/" + article.slug + "/edit"}>{article.title}</Link></td>
+                    <td>{article.category.name}</td>
+                    <td>{article.author.name}</td>
+                    <td className="text-center">{article.created_at}</td>
+                    <td className="text-center">{article.updated_at}</td>
+                    <td className="text-center">{article.approved == 1 ? 'Yes' : <Link to={"/article/" + article.slug + "/review"}>Review</Link>}</td>
+                </tr>
+            ));
         });
 
         return (
             <>
                 <Header></Header>
-                <Container fluid={true} style={{minHeight: '600px'}}>
-                    <Row className="justify-content-md-center">
-                        {membresias_cards}
-                        <Col lg={4} sm={4} >
-                            <Card style={{
-                                height: "250px",
-                                marginTop: '15px'
-                            }}>
-                                <a href="/membresia/nuevo" className="text-center">
-                                    <FontAwesomeIcon icon={faCirclePlus} size="6x" style={{ margin: "30px", marginTop: '45px' }} />
-                                    <Card.Title className="text-center">Nueva membresía</Card.Title>
-                                </a>
-                            </Card>
+                <Container style={{ minHeight: '600px' }}>
+                    <Row>
+                        <Col>
+                            <Link className="float-end" to="/article/new">
+                                <Button style={{borderRadius: 30}} variant="red">Add article</Button>
+                            </Link>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Table>
+                                <thead>
+                                    <tr>
+                                        <td>#</td>
+                                        <td>Title</td>
+                                        <td>Category</td>
+                                        <td>Author</td>
+                                        <td className="text-center">Created at</td>
+                                        <td className="text-center">Updated at</td>
+                                        <td className="text-center">Approved</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {rows}
+                                </tbody>
+                            </Table>
                         </Col>
                     </Row>
                 </Container>

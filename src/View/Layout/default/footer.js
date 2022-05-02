@@ -1,4 +1,3 @@
-import Logo from '../../assets/vector/default-monochrome-white.svg';
 
 import {
     Container,
@@ -13,17 +12,20 @@ const footer_element = {
 
 
 const Footer = () => {
+
+    return null;
+
     return (
         <Container fluid style={{ background: '#000', marginTop: '15px' }}>
             <Row>
                 <Col sm={2} xs={2} md={2} lg={1}>
-                    <img src={Logo} style={{ width: '75%', margin: '15px' }} />
-                    <h3 className='d-none d-'>Superks</h3>
+                    <img src="" style={{ width: '75%', margin: '15px' }} />
+                    <h3 className='d-none d-'>Bauns</h3>
                 </Col>
                 <Col>
                     <Row>
                         <Col sm={6} xs={6} md={3} lg={3}>
-                            <h5 style={footer_element}>SUPERKS</h5>
+                            <h5 style={footer_element}>Bauns</h5>
                             <p style={footer_element}>Preguntas</p>
                         </Col>
                         <Col sm={6} xs={6} md={3} lg={3}>

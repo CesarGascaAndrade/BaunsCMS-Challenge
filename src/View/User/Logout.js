@@ -15,6 +15,7 @@ import {
 
 export default () => {
     cookieman.deleteItem('token');
+    cookieman.deleteItem('user');
     window.location.href = '/login';
     return (<div></div>);
 };

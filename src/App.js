@@ -8,14 +8,12 @@ import 'react-notifications/lib/notifications.css';
 
 import Index from './View/Index/index';
 import Home from './View/Home/index';
-import Login from './View/Usuario/Login';
-import Logout from './View/Usuario/Logout';
-import AceptarInvitacion from './View/Usuario/AceptarInvitacion';
+import Login from './View/User/Login';
+import Logout from './View/User/Logout';
 
-import MembresiaEmitirQr from './View/Membresia/Emitir/Qr';
-import MembresiaLeerQr from './View/Membresia/LeerQr';
-import MembresiaConsultar from './View/Membresia/Consultar';
-import MembresiaForm from './View/Membresia/Formulario';
+import Article from './View/Article/Index';
+import ArticleReview from './View/Article/Review';
+import ArticleForm from './View/Article/Form';
 
 import {
   BrowserRouter,
@@ -31,13 +29,12 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/aceptar_invitacion" element={<AceptarInvitacion />} />
         
-        <Route path="/membresia/emitir/qr/:membresia" element={<MembresiaEmitirQr/>} />
-        <Route path="/membresia/leer_qr" element={<MembresiaLeerQr/>} />
-        <Route path="/membresia/:membresia_uuid" element={<MembresiaConsultar/>} />
-        <Route path="/membresia/:membresia_uuid/editar" element={<MembresiaForm/>} />
-        <Route path="/membresia/nuevo" element={<MembresiaForm/>} />
+        <Route path="/article/:slug" element={<Article />} />
+        <Route path="/article/:slug/edit" element={<ArticleForm />} />
+        <Route path="/article/:slug/review" element={<ArticleReview />} />
+        <Route path="/article/new" element={<ArticleForm />} />
+        
       </Routes>
     </BrowserRouter>
   );
