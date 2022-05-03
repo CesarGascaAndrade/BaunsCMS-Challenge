@@ -10,9 +10,6 @@ import {
 
 import { Link, Navigate } from 'react-router-dom';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
-
 import axios from 'axios';
 
 import config from '../../config/core';
@@ -21,21 +18,18 @@ import cookieman from '../common/cookieman';
 import Header from '../Layout/default/header';
 import Footer from '../Layout/default/footer';
 
-import CardArticle from '../Elements/CardArticle';
-
 import loadingOverlay from '../common/loadingOverlay';
 import validateSession from '../common/validateSession';
 
-class Home extends Component {
+class Users extends Component {
     state = {
         loading: true,
-        articles: [],
+        users: [],
         redirect: null
     };
 
     componentDidMount() {
         validateSession().then(result => {
-
         }).catch(error => {
             this.setState({
                 ...this.state,
@@ -43,16 +37,16 @@ class Home extends Component {
             });
         });
 
-        const url = config.backend + '/articles';
+        const url = config.backend + '/users';
 
         axios.get(url, {
             headers: {
-                token: cookieman.getItem('token')
+                Authorization: 'Bearer ' + cookieman.getItem('token')
             }
         }).then(response => {
             this.setState({
                 ...this.state,
-                articles: response.data,
+                users: response.data,
             });
         }).catch(error => {
             console.log('error', error);
@@ -73,17 +67,16 @@ class Home extends Component {
 
         const rows = [];
 
-        this.state.articles.forEach((article) => {
 
+        this.state.users.forEach(user => {
             rows.push((
-                <tr key={article.id}>
-                    <td>{article.id}</td>
-                    <td><Link to={"/article/" + article.slug + "/edit"}>{article.title}</Link></td>
-                    <td>{article.category.name}</td>
-                    <td>{article.author.name}</td>
-                    <td className="text-center">{article.created_at}</td>
-                    <td className="text-center">{article.updated_at}</td>
-                    <td className="text-center">{article.approved == 1 ? 'Yes' : <Link to={"/article/" + article.slug + "/review"}>Review</Link>}</td>
+                <tr key={user.id}>
+                    <td>{user.id}</td>
+                    <td><Link to={"/user/" + user.id}>{user.name}</Link></td>
+                    <td>{user.role}</td>
+                    <td className="text-center">{user.enabled == 1 ? 'Enabled' : 'Disabled'}</td>
+                    <td className="text-center">{user.created_at}</td>
+                    <td className="text-center">{user.updated_at}</td>
                 </tr>
             ));
         });
@@ -95,13 +88,13 @@ class Home extends Component {
                 <Container style={{ minHeight: '600px' }}>
                     <Row style={{ margin: '30px' }}>
                         <Col>
-                            <h1 className='text-center'>Articles</h1>
+                            <h1 className='text-center'>Users</h1>
                         </Col>
                     </Row>
                     <Row>
                         <Col>
-                            <Link className="float-end" to="/article/new">
-                                <Button style={{ borderRadius: 30 }} variant="red">Add article</Button>
+                            <Link className="float-end" to="/user/new">
+                                <Button style={{ borderRadius: 30 }} variant="red">Add user</Button>
                             </Link>
                         </Col>
                     </Row>
@@ -110,13 +103,12 @@ class Home extends Component {
                             <Table>
                                 <thead>
                                     <tr>
-                                        <td>#</td>
-                                        <td>Title</td>
-                                        <td>Category</td>
-                                        <td>Author</td>
+                                        <td>ID</td>
+                                        <td>Name</td>
+                                        <td>Role</td>
+                                        <td className="text-center">Enabled</td>
                                         <td className="text-center">Created at</td>
                                         <td className="text-center">Updated at</td>
-                                        <td className="text-center">Approved</td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -132,4 +124,4 @@ class Home extends Component {
     }
 }
 
-export default Home;
+export default Users;

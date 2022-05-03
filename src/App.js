@@ -15,6 +15,10 @@ import Article from './View/Article/Index';
 import ArticleReview from './View/Article/Review';
 import ArticleForm from './View/Article/Form';
 
+import Users from './View/User/Index';
+import UserForm from './View/User/Form';
+
+
 import {
   BrowserRouter,
   Routes,
@@ -35,6 +39,10 @@ function App() {
         <Route path="/article/:slug/review" element={<ArticleReview />} />
         <Route path="/article/new" element={<ArticleForm />} />
         
+        <Route path="/users" element={<Users />} />
+        <Route path="/user/:id" element={<UserForm />} />
+        <Route path="/user/new" element={<UserForm />} />
+
       </Routes>
     </BrowserRouter>
   );

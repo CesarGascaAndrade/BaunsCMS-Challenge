@@ -6,6 +6,8 @@ import {
 
 } from 'react-bootstrap';
 
+import { Navigate } from 'react-router-dom';
+
 import cookieman from '../common/cookieman';
 import jwt_decode from 'jwt-decode';
 
@@ -19,8 +21,17 @@ import Footer from '../Layout/default/footer';
 import CardArticle from '../Elements/CardArticle';
 
 import withNavigation from '../common/withNavigation';
+import validateSession from '../common/validateSession';
+
+
 
 const Index = (props) => {
+    const [redirect, setRedirect] = useState();
+    validateSession().then(result => {
+    }).catch(error => {
+        setRedirect(<Navigate to="/logout" />);
+    });
+
     const [article, setArticle] = useState({
         image: '',
         title: '',
@@ -54,6 +65,7 @@ const Index = (props) => {
 
     return (
         <>
+            {redirect}
             <Header />
             <Container>
                 <Row>
@@ -71,7 +83,7 @@ const Index = (props) => {
                         {<div dangerouslySetInnerHTML={{ __html: article.content }}></div>}
                     </Col>
                     <Col xs={12} sm={12} md={5} lg={5}>
-                    <img style={{width: '100%'}} src={config.host + article.image.replace('public', 'public/storage')} />
+                        <img style={{ width: '100%' }} src={config.host + article.image.replace('public', 'public/storage')} />
                     </Col>
                 </Row>
                 <Row>

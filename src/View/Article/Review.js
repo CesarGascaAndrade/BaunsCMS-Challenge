@@ -19,8 +19,17 @@ import Footer from '../Layout/default/footer';
 import loadingOverlay from '../common/loadingOverlay';
 
 import withNavigation from '../common/withNavigation';
+import validateSession from '../common/validateSession';
 
 const Index = (props) => {
+    const [loading, setLoading] = useState(true);
+    const [redirect, setRedirect] = useState(false);
+
+    validateSession().then(result => {
+    }).catch(error => {
+        setRedirect(<Navigate to="/logout" />);
+    });
+    
     const [article, setArticle] = useState({
         image: '',
         title: '',
@@ -33,8 +42,7 @@ const Index = (props) => {
         created_at: ''
     });
 
-    const [loading, setLoading] = useState(true);
-    const [redirect, setRedirect] = useState(false);
+    
 
     useEffect(() => {
 

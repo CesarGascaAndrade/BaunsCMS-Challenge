@@ -42,36 +42,20 @@ class Formulario extends Component {
         super(props);
 
         this.state = {
-            approved: 0,
-            approved_by: '',
-            author: {
-                id: 0,
-                role_id: 0,
-                name: '',
-                email: '',
-            },
-            category: {
-                id: 1,
-                name: '',
-                created_at: ''
-            },
-            category_id: 0,
-            content: '',
             created_at: '',
+            email: '',
+            enabled: 0,
             id: 0,
-            image: '',
-            publish_date: '',
-            slug: '',
-            title: '',
-            updated_at: '',
-            user_id: 1,
+            name: '',
+            role: '',
+            operation: 'New',
+            password: null,
+            password_confirmation: null,
             loading: true,
             error: '',
-            contentEditorState: '',
             redirect: null,
-            operation: 'New',
-            categories: [],
-            image_file: null
+            image: '',
+            image_file: null,
         };
     }
 
@@ -85,43 +69,28 @@ class Formulario extends Component {
             });
         });
 
-        const url = config.backend + '/categories';
-        axios.get(url, {
-            headers: {
-                token: cookieman.getItem('token')
-            }
-        }).then(response => {
-            const categories = response.data;
+        
 
-            this.setState({
-                ...this.state,
-                categories: categories
-            });
-        }).catch(error => {
-            console.log(error);
-            //window.location.href = '/home';
-        });
+        if (typeof this.props.params.id != 'undefined') {
+            const user_id = this.props.params.id;
 
-        if (typeof this.props.params.slug != 'undefined') {
-            const article_slug = this.props.params.slug;
+            if (typeof user_id != 'undefined') {
+                const url = config.backend + '/user/' + user_id;
 
-            if (typeof article_slug != 'undefined') {
-                const url = config.backend + '/article/' + article_slug;
-                axios.get(url).then(response => {
-                    const article = response.data;
-
-                    const contentBlock = htmlToDraft(article.content);
-                    const contentState = ContentState.createFromBlockArray(contentBlock);
+                axios.get(url, {
+                    headers: {
+                        Authorization: 'Bearer ' + cookieman.getItem('token')
+                    }
+                }).then(response => {
+                    const user = response.data;
 
                     this.setState({
                         ...this.state,
-                        ...article,
+                        ...user,
                         loading: false,
-                        contentEditorState: EditorState.createWithContent(contentState),
                         operation: 'Edit'
                     });
                 }).catch(error => {
-                    console.log(error);
                     this.setState({
                         redirect: (<Navigate to='/home' />)
                     });
@@ -129,22 +98,12 @@ class Formulario extends Component {
             }
             else {
                 this.setProp('loading', false);
-
             }
-
         }
         else {
             this.setProp('loading', false);
         }
     }
-
-    onEditorStateChange = (editorState) => {
-        this.setState({
-            ...this.state,
-            contentEditorState: editorState,
-            content: draftToHtml(convertToRaw(editorState.getCurrentContent()))
-        });
-    };
 
 
     setProp = (prop, value) => {
@@ -155,19 +114,19 @@ class Formulario extends Component {
     }
 
 
-    saveArticle(event) {
-        this.setProp('loading', true);
-
-        const url = config.backend + '/article/';
+    saveUser() {
+        //this.setProp('loading', true);
 
         // validate
-
         const formData = new FormData();
 
-        formData.append('title', this.state.title);
-        formData.append('content', this.state.content);
-        formData.append('category_id', this.state.category_id);
+        formData.append('role', this.state.role);
+        formData.append('name', this.state.name);
+        formData.append('email', this.state.email);
+        formData.append('password', this.state.password);
+        formData.append('password_confirmation', this.state.password_confirmation);
 
+        // future upload profile picture
         if (this.state.image_file !== null) {
             formData.append(
                 "image",
@@ -176,10 +135,10 @@ class Formulario extends Component {
             );
         }
 
-        if (typeof this.props.params.slug != 'undefined') {
-            const url = config.backend + '/article/';
+        if (typeof this.props.params.id != 'undefined') {
+            const url = config.backend + '/user/';
 
-            axios.post(url + this.props.params.slug, formData, {
+            axios.post(url + this.props.params.id, formData, {
                 headers: {
                     Authorization: 'Bearer ' + cookieman.getItem('token')
                 }
@@ -199,15 +158,16 @@ class Formulario extends Component {
             });
         }
         else {
-            const url = config.backend + '/articles';
+            const url = config.backend + '/user/register';
 
             axios.post(url, formData, {
                 headers: {
                     Authorization: 'Bearer ' + cookieman.getItem('token')
                 }
             }).then(response => {
+                NotificationManager.success('We got a new user', 'Success!');
                 this.setState({
-                    redirect: (<Navigate to='/home' />)
+                    redirect: (<Navigate to='/users' />)
                 });
             }).catch(error => {
                 NotificationManager.error(error.response.data.error, 'Error');
@@ -218,57 +178,72 @@ class Formulario extends Component {
 
 
     render() {
+        const roles = {
+            ROLE_WRITER: 'Writer',
+            ROLE_REVIEWER: 'Reviewer',
+            ROLE_USER: 'Common User',
+        };
 
-        const categories_select = [
+        const role_options = [
             (<option key={0} value={0}>Choose one</option>)
         ];
 
-        this.state.categories.forEach(category => {
-            categories_select.push((
-                <option key={category.id} value={category.id}>{category.name}</option>
+        Object.keys(roles).forEach(role => {
+            role_options.push((
+                <option key={role} value={role}>{roles[role]}</option>
             ));
         });
 
         return (
             <>
-                {this.state.loading ? loadingOverlay() : null}
                 {this.state.redirect}
+                {this.state.loading ? loadingOverlay() : null}
                 <Header />
                 <Container>
                     <Row style={{ margin: '30px' }}>
                         <Col>
-                            <h1 className='text-center'>{this.state.operation} Article</h1>
+                            <h1 className='text-center'>{this.state.operation} User</h1>
                         </Col>
                     </Row>
                     <Row>
                         <Col sm={12} md={6}>
                             <h3>Data</h3>
                             <Form.Group className='mb-3'>
-                                <FloatingLabel htmlFor="Title" label="Title">
-                                    <Form.Control type="text" id="Title" placeholder="Title" onChange={e => {
-                                        this.setProp('title', e.target.value);
-                                    }} value={this.state.title} />
+                                <FloatingLabel htmlFor="Name" label="Name">
+                                    <Form.Control type="text" id="Name" placeholder="Name" onChange={e => {
+                                        this.setProp('name', e.target.value);
+                                    }} value={this.state.name} />
                                 </FloatingLabel>
                             </Form.Group>
                             <Form.Group className='mb-3'>
-                                <FloatingLabel htmlFor="Category" label="Category">
-                                    <Form.Select id="Category" placeholder="Category" onChange={e => {
-                                        this.setProp('category_id', e.target.value);
-                                    }} value={this.state.category_id} >
-                                        {categories_select}
+                                <FloatingLabel htmlFor="Email" label="Email">
+                                    <Form.Control type="text" id="Email" placeholder="Email" onChange={e => {
+                                        this.setProp('email', e.target.value);
+                                    }} value={this.state.email} />
+                                </FloatingLabel>
+                            </Form.Group>
+                            <Form.Group className='mb-3'>
+                                <FloatingLabel htmlFor="Role" label="Role">
+                                    <Form.Select id="Role" placeholder="Role" onChange={e => {
+                                        this.setProp('role', e.target.value);
+                                    }} value={this.state.role} >
+                                        {role_options}
                                     </Form.Select>
                                 </FloatingLabel>
                             </Form.Group>
                             <Form.Group className='mb-3'>
-                                <Form.Label htmlFor="Content">Content</Form.Label>
-                                <Editor
-                                    editorState={this.state.contentEditorState}
-                                    toolbarClassName="toolbarClassName"
-                                    wrapperClassName="wrapperClassName"
-                                    editorClassName="editorClassName"
-                                    onEditorStateChange={this.onEditorStateChange}
-                                    style={{ height: '150px' }}
-                                />
+                                <FloatingLabel htmlFor="Password" label="Password">
+                                    <Form.Control type="password" id="Password" placeholder="Password" onChange={e => {
+                                        this.setProp('password', e.target.value);
+                                    }} value={this.state.password} />
+                                </FloatingLabel>
+                            </Form.Group>
+                            <Form.Group className='mb-3'>
+                                <FloatingLabel htmlFor="PasswordConfirmation" label="Password Confirmation">
+                                    <Form.Control type="password" id="PasswordConfirmation" placeholder="Password Confirmation" onChange={e => {
+                                        this.setProp('password_confirmation', e.target.value);
+                                    }} value={this.state.password_confirmation} />
+                                </FloatingLabel>
                             </Form.Group>
                         </Col>
                         <Col sm={12} md={6}>
@@ -295,7 +270,7 @@ class Formulario extends Component {
                         <Col xs={12} sm={12} md={6}>
                             <div className="d-grid gap-2 mt-1rem">
                                 <Button variant="red" style={{ borderRadius: 30 }} size="lg" onClick={e => {
-                                    this.saveArticle();
+                                    this.saveUser();
                                 }}><FontAwesomeIcon icon={faSave} /></Button>
                             </div>
                         </Col>
