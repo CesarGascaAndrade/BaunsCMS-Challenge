@@ -12,8 +12,9 @@ import config from '../../config/core';
 
 export default (props) => {
     return (
-        <Col xs={12} sm={12} md={4} lg={4}  >
-
+        <Col xs={12} sm={12} md={4} lg={4}  style={{
+            marginTop: '15px'
+        }}>
             <Card>
                 <Card.Img 
                     variant="top" 

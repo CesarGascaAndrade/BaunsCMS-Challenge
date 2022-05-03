@@ -49,7 +49,7 @@ const Index = () => {
             name="all"
             type="checkbox"
             checked={selectedCategories.length == 0}
-            onClick={e => {
+            onChange={e => {
                 emptySelectedCategories();
             }}
         />)
@@ -74,7 +74,7 @@ const Index = () => {
             category
         ];
         setSelectedCategories(updatedSelectedCategories);
-        
+
     }
 
     function removeCategory(category) {
@@ -86,15 +86,17 @@ const Index = () => {
         }
 
         setSelectedCategories(updatedSelectedCategories);
-        
+
     }
 
+    let articles_shown = 0;
 
     articles.forEach(article => {
+        if(articles_shown > 10) return false;
+        articles_shown = articles_shown + 1;
         if (article.approved) {
-
-            if(selectedCategories.length > 0) {
-                if(selectedCategories.indexOf(article.category.name) !== -1) {
+            if (selectedCategories.length > 0) {
+                if (selectedCategories.indexOf(article.category.name) !== -1) {
                     el_articles.push((
                         <CardArticle key={article.id} article={article} />
                     ));
@@ -118,7 +120,7 @@ const Index = () => {
                 value={category.slug}
                 type="checkbox"
                 checked={selectedCategories.indexOf(category.name) !== -1 ? true : false}
-                onClick={e => {
+                onChange={e => {
                     updateCategories(category.name, e.target.checked)
                 }}
             />
