@@ -11,14 +11,15 @@ import {
 import config from '../../config/core';
 
 export default (props) => {
+    
     return (
-        <Col xs={12} sm={12} md={4} lg={4}  style={{
+        <Col xs={12} sm={12} md={4} lg={4} style={{
             marginTop: '15px'
         }}>
             <Card>
-                <Card.Img 
-                    variant="top" 
-                    src={config.host + props.article.image.replace('public', 'public/storage')} 
+                <Card.Img
+                    variant="top"
+                    src={props.article.image}
                     style={{
                         width: '100%',
                         height: '250px',
@@ -31,7 +32,9 @@ export default (props) => {
                     <Card.Text>
                         {props.article.brief}...
                     </Card.Text>
-                    <Link className="float-end" to={"article/" + props.article.slug}> See more</Link>
+                    {
+                        typeof props.article.slug !== 'undefined' ? <Link className="float-end" to={"article/" + props.article.slug}> See more</Link> : <a>&nbsp;</a>
+                    }
                 </Card.Body>
             </Card>
         </Col >

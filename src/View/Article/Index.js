@@ -6,11 +6,6 @@ import {
 
 } from 'react-bootstrap';
 
-import { Navigate } from 'react-router-dom';
-
-import cookieman from '../common/cookieman';
-import jwt_decode from 'jwt-decode';
-
 import axios from 'axios';
 import config from '../../config/core';
 
@@ -22,7 +17,7 @@ import withNavigation from '../common/withNavigation';
 
 
 const Index = (props) => {
-    
+
     const [article, setArticle] = useState({
         image: '',
         title: '',
@@ -57,29 +52,43 @@ const Index = (props) => {
     return (
         <>
             <Header />
-            <Container>
+            <Container fluid={true}>
                 <Row>
+                    <Col xs={0} sm={0} md={1}>
+                        
+                    </Col>
                     <Col>
-                        <h1 className="text-center">{article.title}</h1>
+                        <Row>
+                            <Col>
+                                <h1 className="text-center">{article.title}</h1>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <p className="text-end">{article.author.name}<br />{created_at.toDateString()}</p>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col xs={12} sm={12} md={7} lg={7}>
+                                {<div dangerouslySetInnerHTML={{ __html: article.content }}></div>}
+                            </Col>
+                            <Col xs={12} sm={12} md={5} lg={5}>
+                                <img style={{ width: '100%' }} src={config.host + article.image.replace('public', 'public/storage')} />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <h3>Author: {article.author.name}</h3>
+                                <p>Category: {article.category.name}</p>
+                            </Col>
+                        </Row>
                     </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <p className="text-end">{article.author.name}<br />{created_at.toDateString()}</p>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col xs={12} sm={12} md={7} lg={7}>
-                        {<div dangerouslySetInnerHTML={{ __html: article.content }}></div>}
-                    </Col>
-                    <Col xs={12} sm={12} md={5} lg={5}>
-                        <img style={{ width: '100%' }} src={config.host + article.image.replace('public', 'public/storage')} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <h3>Author: {article.author.name}</h3>
-                        <p>Category: {article.category.name}</p>
+                    <Col md={1}>
+                        <img style={{
+                            width: '100%',
+                            height: '750px',
+                            objectFit: 'cover'
+                        }} src="https://www.labgamboa.com/wp-content/uploads/2016/10/orionthemes-placeholder-image.jpg" />
                     </Col>
                 </Row>
             </Container>

@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import {
     Row,
     Container,
-    Form
+    Form,
+    Card
 } from 'react-bootstrap';
 
 import axios from 'axios';
@@ -137,6 +138,18 @@ const Index = () => {
                     </div>
                 </Row>
                 <Row style={{ marginTop: '50px', marginBottom: '50px' }}>
+                    <CardArticle
+                        key={0}
+                        article={{
+                            title: 'This is an ad',
+                            image: 'https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png',
+                            content: 'This is an ad desc',
+                            brief: 'This is an ad desc',
+                            category: {
+                                name: 'Ad'
+                            }
+                        }}
+                     />
                     {el_articles}
                 </Row>
             </Container>
