@@ -285,7 +285,7 @@ class Formulario extends Component {
                                 <img style={{ maxWidth: '100%' }} src={
                                     this.state.image_file !== null ? (
                                         URL.createObjectURL(this.state.image_file)
-                                    ) : this.state.image !== '' ? config.host + this.state.image.replace('public', 'public/storage') : null
+                                    ) : this.state.image !== '' ? this.state.image : null
                                 } />
 
                             </p>

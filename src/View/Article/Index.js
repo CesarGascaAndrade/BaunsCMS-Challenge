@@ -73,7 +73,7 @@ const Index = (props) => {
                                 {<div dangerouslySetInnerHTML={{ __html: article.content }}></div>}
                             </Col>
                             <Col xs={12} sm={12} md={5} lg={5}>
-                                <img style={{ width: '100%' }} src={config.host + article.image.replace('public', 'public/storage')} />
+                                <img style={{ width: '100%' }} src={article.image} />
                             </Col>
                         </Row>
                         <Row>
