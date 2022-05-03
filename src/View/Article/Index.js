@@ -18,20 +18,11 @@ import config from '../../config/core';
 import Header from '../Layout/default/header';
 import Footer from '../Layout/default/footer';
 
-import CardArticle from '../Elements/CardArticle';
-
 import withNavigation from '../common/withNavigation';
-import validateSession from '../common/validateSession';
-
 
 
 const Index = (props) => {
-    const [redirect, setRedirect] = useState();
-    validateSession().then(result => {
-    }).catch(error => {
-        setRedirect(<Navigate to="/logout" />);
-    });
-
+    
     const [article, setArticle] = useState({
         image: '',
         title: '',
@@ -65,7 +56,6 @@ const Index = (props) => {
 
     return (
         <>
-            {redirect}
             <Header />
             <Container>
                 <Row>

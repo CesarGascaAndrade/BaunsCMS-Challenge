@@ -26,8 +26,9 @@ export default (props) => {
                 />
                 <Card.Body>
                     <Card.Title>{props.article.title}</Card.Title>
+                    <p>{props.article.category.name}</p>
                     <Card.Text>
-                        {props.article.content.substr(0, 45)}...
+                        {props.article.brief}...
                     </Card.Text>
                     <Link className="float-end" to={"article/" + props.article.slug}> See more</Link>
                 </Card.Body>
