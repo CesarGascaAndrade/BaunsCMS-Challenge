@@ -93,22 +93,26 @@ const Index = () => {
     let articles_shown = 0;
 
     articles.forEach(article => {
+        
         if(articles_shown > 10) return false;
-        articles_shown = articles_shown + 1;
+        
         if (article.approved) {
             if (selectedCategories.length > 0) {
                 if (selectedCategories.indexOf(article.category.name) !== -1) {
                     el_articles.push((
                         <CardArticle key={article.id} article={article} />
                     ));
+                    articles_shown = articles_shown + 1;
                 }
             }
             else {
                 el_articles.push((
                     <CardArticle key={article.id} article={article} />
                 ));
+                articles_shown = articles_shown + 1;
             }
         }
+        
     });
 
     categories.forEach(category => {
